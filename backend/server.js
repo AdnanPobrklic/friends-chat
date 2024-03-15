@@ -21,9 +21,12 @@ const sessionMiddleware = session({
     saveUninitialized: false,
     cookie: { 
         sameSite: 'none', 
+        secure: true,
+        partitioned: true,
     },
     store: MongoStore.create({ mongoUrl: dbURI }),
 });
+
 
 app.use(express.json());
 app.use(cors({
