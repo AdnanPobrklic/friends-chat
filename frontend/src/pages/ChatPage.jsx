@@ -7,8 +7,6 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { UserContext } from "../components/Auth/ProtectedRoute";
 import io from "socket.io-client"
 
-let socket;
-
 export default function ChatPage() {
 
     const {user, setUser}  = useContext(UserContext)
@@ -72,7 +70,7 @@ export default function ChatPage() {
         };
         
     }, [])
-
+    
     useEffect(() => {
 
         if(!infoMsg.isShown) return

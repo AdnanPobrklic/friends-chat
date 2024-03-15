@@ -18,11 +18,16 @@ export default function HomePage() {
     const [showSidebar, setShowSidebar] = useState(true)
 
     useEffect(() => {
+
         const newSocket = io.connect(import.meta.env.VITE_BACKEND_DOMAIN);
         setSocket(newSocket) 
 
         newSocket.emit('onlineSetter', {id: user._id, friends: user.friends})
         newSocket.emit('ReloadSession', {user});
+
+        setInterval(() => {
+            newSocket.emit('ping', {id: user._id})
+        }, 1000)
     
         return () => {
             if (newSocket) {

@@ -2,7 +2,7 @@ const sharedsession = require("express-socket.io-session");
 const Message = require("../models/Message");
 const User = require("../models/User");
 const userRoom = new Map();
-const onlineUsers = new Set()
+const onlineUsers = new Map()
 let io;
 let timeoutId
 function initializeSocket(server, sessionMiddleware) {
@@ -33,17 +33,45 @@ function initializeSocket(server, sessionMiddleware) {
         socket.on('ReloadSession', function(data){
             socket.session.reload(function(err){socket.session.user = data.user});
         });
+
+        socket.on("ping", async data => {
+            onlineUsers.set(data.id, Date.now())
+        })
+
+        setInterval(async () => {
+
+            const now = Date.now();
+
+            for (let [userId, lastPingTime] of onlineUsers.entries()) {
+                if (now - lastPingTime >= 15000) {
+
+                    const user = await User.findById(userId);
+        
+                    if(user && user.isOnline == 1){
+                        user.isOnline = 0;
+                        await user.save();
+                        user.friends.forEach(friend => {
+                            if(onlineUsers.has(friend._id)){
+                                socket.session.user.friends.forEach(friend => {
+                                    io.to(friend._id).emit("friendDC", {id: socket.session.user._id});
+                                })
+                            }
+                        })
+                        onlineUsers.delete(userId);
+                    }
+                }
+
+            }
+        }, 15000);
         
         socket.on("onlineSetter", async data => {
             clearTimeout(timeoutId);
-            onlineUsers.add(data.id)
+            onlineUsers.set(data.id, Date.now())
             const user = await User.findById(data.id)
             user.isOnline = 1;
             await user.save()
             socket.join(data.id)
-            const onlineFriends = data.friends
-            .filter(friend => onlineUsers.has(friend._id))
-            .map(friend => friend._id);
+            const onlineFriends = data.friends.filter(friend => onlineUsers.has(friend._id)).map(friend => friend._id);
             data.friends.forEach(friend => {
                 io.to(friend._id).emit("friendCN", {id: data.id});
             })
