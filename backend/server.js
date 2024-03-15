@@ -20,7 +20,7 @@ const sessionMiddleware = session({
     resave: true,
     saveUninitialized: false,
     cookie: { 
-        sameSite: 'lax', 
+        sameSite: 'none', 
         partitioned: true,
     },
     store: MongoStore.create({ mongoUrl: dbURI }),
