@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
+import { useMatch } from 'react-router-dom'
 import {createBrowserRouter, RouterProvider} from "react-router-dom"
 import SignUpPage from './pages/SignUpPage'
 import LogInPage from './pages/LogInPage'
@@ -12,6 +13,10 @@ import NotFound from './pages/NotFound'
 import ChatPage from './pages/ChatPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 
+const ChatPageWithKey = () => {
+  const match = useMatch("/chat/:id");
+  return <ChatPage key={match.params.id} />
+}
 
 const router = createBrowserRouter([
   {
@@ -51,7 +56,7 @@ const router = createBrowserRouter([
     path: "/chat/:id",
     element: (
       <ProtectedRoute>
-        < ChatPage />
+          < ChatPageWithKey />
       </ProtectedRoute>
     )
   },

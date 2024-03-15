@@ -9,7 +9,6 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
     const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
-    const [showFOptions, setShowFOptions] = useState(false);
     const [friends, setFriends] = useState(user.friends || []);
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -17,17 +16,13 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
         setShowModal(true);
     };
 
-    const handleShowFOptions = () => {
-        setShowFOptions((prevState) => !prevState);
+    const handleShowFOptions = e => {
+        e.target.nextElementSibling.classList.toggle("hidden")
     };
 
     useEffect(() => {
         setFriends(user.friends || []);
     }, [user.friends]);
-
-    useEffect(() => {
-        console.log(friends)
-    }, [friends]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -272,24 +267,24 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
                 ) : (
                     filteredFriends.map((friend, index) => (
                         <li key={friend._id} className={`flex gap-5 items-center px-2 ${(friend.unreadMessage && friend._id != getReceiverId()) ? "bg-blue-950" : "bg-neutral-950"} hover:bg-zinc-900 transition-all cursor-pointer border-b-4 border-neutral-900`}>
-                                <a
-                                href={`/chat/${getRoomName(user._id, friend._id)}`}
-                                className="grow flex items-center gap-5 p-2 pl-3 text-center"
-                                >
+                                <Link
+                                    to={`/chat/${getRoomName(user._id, friend._id)}`}
+                                    className="grow flex items-center gap-5 p-2 pl-3 text-center"
+                                    >
 
-                                <div className="relative">
-                                    <i className="fa-solid fa-user text-2xl"></i>
-                                    <span className={`absolute top-[5px] right-[-15px] ${friend.isOnline === 1 ? "text-lime-500" : "text-gray-500"} text-4xl`}>&#x2022;</span>
-                                </div>
-                                <div className="flex flex-col">
-                                    <p className="text-sm font-semibold">{friend.username}</p>
-                                    <p className="text-xs font-semibold">#{friend.friCode}</p>
-                                </div>
-                            </a>
+                                    <div className="relative">
+                                        <i className="fa-solid fa-user text-2xl"></i>
+                                        <span className={`absolute top-[5px] right-[-15px] ${friend.isOnline === 1 ? "text-lime-500" : "text-gray-500"} text-4xl`}>&#x2022;</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <p className="text-sm font-semibold">{friend.username}</p>
+                                        <p className="text-xs font-semibold">#{friend.friCode}</p>
+                                    </div>
+                                </Link>
                             {(friend.unreadMessage && friend._id != getReceiverId()) && <p className="font-black text-blue-500">!</p>}
                             <div className="text-gray-200 font-black relative text-end text-[15px]">
                                 <i className="fa-solid fa-gear md:hover:opacity-50" onClick={handleShowFOptions}></i>
-                                <div className={`${showFOptions ? "block" : "hidden"} absolute right-[0px] bg-gray-700 rounded flex flex-col`}>
+                                <div className={`z-20 hidden absolute right-[0px] bg-gray-700 rounded flex flex-col`}>
                                     <button
                                         onClick={handleDeleteFriend}
                                         value={friend._id}
@@ -316,7 +311,7 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
             <div className="h-[75px] mt-auto text-slate-200 flex items-center p-2 justify-between bg-neutral-900 font-roboto user-info-div">
                 <div className="flex items-center gap-5 text-center">
                     <i className="fa-solid fa-user text-2xl"></i>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col ">
                         <p className="text-[15px] font-semibold">{user.username}</p>
                         <span className="flex gap-2 items-center justify-center">
                             <p className="text-[14px] font-black">#{user.friCode}</p>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "../Auth/ProtectedRoute";
 
 
@@ -6,7 +7,6 @@ export default function Chat({ socket, getReciverId, messages, setMessages, show
 
     const {user, setUser}  = useContext(UserContext)
     const [messageValue, setMessageValue] = useState("")
-
 
     const handleMessageValueChange = e => {
         setMessageValue(e.target.value)
