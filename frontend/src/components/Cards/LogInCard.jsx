@@ -60,42 +60,6 @@ export default function LogInCard({setInfoMsg, infoMsg, setApiLoader}){
             }))
         }
     }
-    
-    const handlePasswordReset = async e => {
-        setApiLoader(true)
-        e.preventDefault()
-    
-        try{
-            const payload = {email: emailValue, password: passwordValue}
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_DOMAIN}/password-reset`, {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json"
-                },
-                body: JSON.stringify(payload),
-                credentials: "include"
-            })
-    
-            const data = await res.json()
-    
-            if(res.status === 200){
-                navigate(`/`, {replace: true})
-            }else{
-                setInfoMsg(prevState => ({
-                    value: data.message,
-                    isShown: true,
-                    isErr: true
-                }))
-            }
-        }catch(err){
-            console.log(err)
-            setInfoMsg(prevState => ({
-                value: "Something went wrong please try again later",
-                isShown: true,
-                isErr: true
-            }))
-        }
-    }  
 
     useEffect(() => {
 
