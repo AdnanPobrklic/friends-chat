@@ -19,7 +19,6 @@ export default function SettingsPage() {
     const [confirmPasswordValue, setConfirmPasswordValue] = useState(""); 
     const [payload, setPayload] = useState({id: user._id})
     const [changeMade, setChangeMade] = useState(false)
-
     const [socket, setSocket] = useState(null) 
 
     useEffect(() => {
@@ -28,6 +27,10 @@ export default function SettingsPage() {
 
         newSocket.emit('onlineSetter', {id: user._id, friends: user.friends})
         newSocket.emit('ReloadSession', {user});
+
+        setInterval(() => {
+            newSocket.emit('ping', {id: user._id})
+        }, 10000)
     
         return () => {
             if (newSocket) {

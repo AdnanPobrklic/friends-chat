@@ -27,7 +27,7 @@ export default function HomePage() {
 
         setInterval(() => {
             newSocket.emit('ping', {id: user._id})
-        }, 1000)
+        }, 10000)
     
         return () => {
             if (newSocket) {

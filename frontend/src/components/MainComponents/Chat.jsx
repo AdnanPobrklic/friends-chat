@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "../Auth/ProtectedRoute";
 
@@ -6,6 +6,7 @@ import { UserContext } from "../Auth/ProtectedRoute";
 export default function Chat({ socket, getReciverId, messages, setMessages, showSidebar }) {
 
     const {user, setUser}  = useContext(UserContext)
+    const inputRef = useRef(null)
     const [messageValue, setMessageValue] = useState("")
 
     const handleMessageValueChange = e => {
@@ -22,6 +23,7 @@ export default function Chat({ socket, getReciverId, messages, setMessages, show
             content: messageValue
         })
         setMessageValue("")
+        inputRef.current.focus()
     }
 
     const handleKeyDown = (e) => {
@@ -96,8 +98,8 @@ export default function Chat({ socket, getReciverId, messages, setMessages, show
                 })}
             </ul>
             <div className="w-full p-5 relative">
-                <textarea onChange={handleMessageValueChange} value={messageValue} onKeyDown={handleKeyDown} className="h-[50px] w-full rounded p-2 bg-gray-500 text-black font-medium outline-none border-none font-roboto" type="text" placeholder="Message..." ></textarea>
-                <i onClick={handleSendMessage} className="fa-solid fa-paper-plane text-black absolute right-[40px] top-[50%] translate-y-[-50%] cursor-pointer md:hover:opacity-50"></i>
+                <textarea ref={inputRef} onChange={handleMessageValueChange} value={messageValue} onKeyDown={handleKeyDown} className="h-[50px] w-full rounded p-2 bg-gray-500 text-white font-medium outline-none border-none font-roboto resize-none" type="text" placeholder="Message..." ></textarea>
+                <i onClick={handleSendMessage} className="fa-solid fa-paper-plane text-white bg-neutral-950 p-2 rounded-full absolute right-[40px] top-[50%] translate-y-[-50%] cursor-pointer md:hover:opacity-50"></i>
             </div>
         </div>
 

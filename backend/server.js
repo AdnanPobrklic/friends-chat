@@ -22,7 +22,6 @@ const sessionMiddleware = session({
     cookie: { 
         sameSite: 'none',
         secure: true,
-        httpOnly: true, 
         partitioned: true,
         maxAge: (7 * 24 * 60 * 60 * 1000)
     },
@@ -30,14 +29,13 @@ const sessionMiddleware = session({
 });
 
 app.set('trust proxy', 1)
+app.use(sessionMiddleware);
 app.use(express.json());
 app.use(cors({
     origin: frontendDomain,
     methods: ["POST", "DELETE", "PATCH"],
     credentials: true
 }));
-app.use(sessionMiddleware);
-
 
 mongoose.connect(dbURI)
 .then(() => {

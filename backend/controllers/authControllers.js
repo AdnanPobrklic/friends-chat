@@ -40,7 +40,7 @@ const logInPost = async (req, res) => {
         const matchingPassword = bcrypt.compareSync(password, user.password)
         if(!matchingPassword) return res.status(400).json({message: "Invalid credentials"})
         req.session.user = user;
-
+        await req.session.save()
         return res.status(200).json({message: "success"})
     }catch(err){
         return res.status(500).json({message: "Internal server error"});    

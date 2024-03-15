@@ -8,9 +8,9 @@ export default function LogInCard({setInfoMsg, infoMsg, setApiLoader}){
     const navigate = useNavigate();
     const [revealPwd, setRevealPwd] = useState(false)
     const [revealSlash, setRevealSlash] = useState(true)
-    const [emailValue, setEmailValue] = useState("")
+    const [emailValue, setEmailValue] = useState("adnanpobrklic30@hotmail.com")
     
-    const [passwordValue, setPasswordValue] = useState("")
+    const [passwordValue, setPasswordValue] = useState("adopoba123")
     
     const handleRevealPwd = () => {
         setRevealPwd(prevState => !prevState);
@@ -41,9 +41,11 @@ export default function LogInCard({setInfoMsg, infoMsg, setApiLoader}){
             })
     
             const data = await res.json()
+
+            console.log(res.status)
     
             if(res.status === 200){
-                navigate(`/`, {replace: true})
+                navigate("/")
             }else{
                 setInfoMsg(prevState => ({
                     value: data.message,

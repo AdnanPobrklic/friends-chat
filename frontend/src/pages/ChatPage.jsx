@@ -56,12 +56,17 @@ export default function ChatPage() {
     }, [])
 
     useEffect(() => {
+        
         const newSocket = io.connect(import.meta.env.VITE_BACKEND_DOMAIN);
         setSocket(newSocket) 
 
         newSocket.emit('onlineSetter', {id: user._id, friends: user.friends})
         newSocket.emit('joinChatRoom', {id1: user._id, id2: getReciverId()});
         newSocket.emit('ReloadSession', {user});
+
+        setInterval(() => {
+            newSocket.emit('ping', {id: user._id})
+        }, 10000)
     
         return () => {
             if (newSocket) {
@@ -70,7 +75,7 @@ export default function ChatPage() {
         };
         
     }, [])
-    
+
     useEffect(() => {
 
         if(!infoMsg.isShown) return
