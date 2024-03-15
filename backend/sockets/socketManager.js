@@ -88,7 +88,7 @@ function initializeSocket(server, sessionMiddleware) {
             socket.on("disconnect", () => {
                 if(socket.session.user._id) userRoom.delete(socket.session.user._id)
             })
-            io.to(getRoomName(data.id1, data.id2)).emit("userJoin", {id: data.id1});
+            socket.broadcast.to(getRoomName(data.id1, data.id2)).emit("userJoin", {id: data.id1});        
         });
 
         socket.on("sedMessage", data => {
