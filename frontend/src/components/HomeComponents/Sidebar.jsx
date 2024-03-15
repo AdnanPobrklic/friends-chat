@@ -272,9 +272,8 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
                 ) : (
                     filteredFriends.map((friend, index) => (
                         <li key={friend._id} className={`flex gap-5 items-center px-2 ${(friend.unreadMessage && friend._id != getReceiverId()) ? "bg-blue-950" : "bg-neutral-950"} hover:bg-zinc-900 transition-all cursor-pointer border-b-4 border-neutral-900`}>
-                                <Link
-                                key={getRoomName(user._id, friend._id)}
-                                to={`/chat/${getRoomName(user._id, friend._id)}`}
+                                <a
+                                href={`/chat/${getRoomName(user._id, friend._id)}`}
                                 className="grow flex items-center gap-5 p-2 pl-3 text-center"
                                 >
 
@@ -286,7 +285,7 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
                                     <p className="text-sm font-semibold">{friend.username}</p>
                                     <p className="text-xs font-semibold">#{friend.friCode}</p>
                                 </div>
-                            </Link>
+                            </a>
                             {(friend.unreadMessage && friend._id != getReceiverId()) && <p className="font-black text-blue-500">!</p>}
                             <div className="text-gray-200 font-black relative text-end text-[15px]">
                                 <i className="fa-solid fa-gear md:hover:opacity-50" onClick={handleShowFOptions}></i>
