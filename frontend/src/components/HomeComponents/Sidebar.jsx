@@ -272,10 +272,12 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
                 ) : (
                     filteredFriends.map((friend, index) => (
                         <li key={friend._id} className={`flex gap-5 items-center px-2 ${(friend.unreadMessage && friend._id != getReceiverId()) ? "bg-blue-950" : "bg-neutral-950"} hover:bg-zinc-900 transition-all cursor-pointer border-b-4 border-neutral-900`}>
-                            <Link
+                                <Link
+                                key={getRoomName(user._id, friend._id)}
                                 to={`/chat/${getRoomName(user._id, friend._id)}`}
                                 className="grow flex items-center gap-5 p-2 pl-3 text-center"
-                            >
+                                >
+
                                 <div className="relative">
                                     <i className="fa-solid fa-user text-2xl"></i>
                                     <span className={`absolute top-[5px] right-[-15px] ${friend.isOnline === 1 ? "text-lime-500" : "text-gray-500"} text-4xl`}>&#x2022;</span>
