@@ -2,7 +2,7 @@
 
 Add your friends via their friChat code and chat with them !
 
-[LIVE](https://friends-chat-das-onrender.com/)
+[LIVE](https://friends-chat-a8iu.onrender.com)
 
 This project is built with MERN stack plus Tailwind for styling.
 
