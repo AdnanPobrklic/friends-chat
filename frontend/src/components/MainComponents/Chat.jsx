@@ -69,9 +69,12 @@ export default function Chat({ socket, getReciverId, messages, setMessages, show
         }
     }, [socket]);
     
-
     return (
         <div className={`bg-zinc-900 ml-auto ${showSidebar ? "w-full md:w-[calc(100%-300px)]" : "grow"} flex flex-col`}>
+            <div className="border-b border-gray-500 text-gray-500 p-5 flex items-center gap-5">
+                    <i className="fa-solid fa-user rounded-full text-white bg-black px-3 py-2 text-2xl"></i> 
+                    <p className="text-xl font-black">{user.friends.find(friend => friend._id == getReciverId()).username}</p>
+            </div>
             <ul className="h-[100%] overflow-y-auto overflow-x-hidden p-5 gap-5 lg:p-10 text-slate-200 flex flex-col chat-container">
                 {messages.map( (msg, index) => {
 
@@ -80,14 +83,14 @@ export default function Chat({ socket, getReciverId, messages, setMessages, show
 
                     return(
                         <li key={index} className={`pb-2 flex items-center gap-3 ${msg.sender == user._id ? "justify-end" : "justify-start"}`}>
-                            <div className={`flex flex flex-col items-start`}>
-                                <div className={`flex ${msg.sender == user._id ? "hidden" : ""} items-center gap-3`}>
+                            <div className={`flex flex flex-col items-start gap-5`}>
+                                <div className={`flex ${(msg.sender == user._id || messages[index-1].sender != user._id) ? "hidden" : ""} items-center gap-3`}>
                                     <i className="fa-solid fa-user bg-gray-500 rounded-full px-[10px] py-[5px] text-3xl"></i>
                                     <div className={`flex items-center gap-3`}>
                                         <p className="font-black">{msg.username}</p>
                                     </div>
                                 </div>
-                                <p className={`relative flex ${msg.sender == user._id ? "justify-end min-w-[70px]" : "min-w-[55px]"} px-4 py-2 my-4 bg-slate-500 rounded-xl break-all`}>
+                                <p className={`relative flex ${msg.sender == user._id ? "justify-end" : "justify-start"} my-1 min-w-[70px] px-4 py-2 bg-slate-500 rounded-xl break-all`}>
                                     {msg.content}
                                     {msg.sender == user._id && <i className={`fa-solid ${msg.isSeen ? "fa-check-double" : "fa-check"} absolute bottom-[-15px] right-[0px] text-xs`}></i>}
                                     <span className="absolute bottom-[-17px] left-[0px] text-xs text-gray-500">{formattedDate}</span>

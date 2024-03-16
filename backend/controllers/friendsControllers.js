@@ -28,6 +28,8 @@ const sendFriendReqPost = async (req, res) => {
 
         user.notifications.push({ typeOf: "fReq", from });
         const io = require("../sockets/socketManager").getIo()
+        console.log(user._id)
+        console.log(String(user._id))
         io.to(String(user._id)).emit("notification", { typeOf: "fReq", from: {username: fromUser.username, _id: from}, time: new Date() });
         await user.save();
 
@@ -44,13 +46,14 @@ const handleFriendReqPost = async (req, res) => {
 
         const { uId1, uId2, accepted } = req.body;
         let user1 = await User.findById(uId1);
-        if (accepted) {
+
+        if(accepted){
             user1.friends.push(uId2); 
             user1.notifications = user1.notifications.filter(
                 notification => String(notification.from) != String(uId2)
             )
-            await user1.save();
 
+            await user1.save();
             const user2 = await User.findById(uId2);
             user2.friends.push(uId1);            
             await user2.save();
@@ -74,7 +77,13 @@ const handleFriendReqPost = async (req, res) => {
 
             io.to(uId1).emit("friendsUpdate", { friends: user1FriendsWO });
             io.to(uId2).emit("friendsUpdate", { friends: user2FriendsWO });
-        } 
+        }else{
+            user1.notifications = user1.notifications.filter(
+                notification => String(notification.from) != String(uId2)
+            )
+
+            await user1.save(); 
+        }
 
         return res.sendStatus(200)
 

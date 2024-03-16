@@ -11,7 +11,6 @@ export default function SettingsPage() {
 
     const [infoMsg, setInfoMsg] = useState({ value: "", isErr: false, isShown: false });
     const {user, setUser}  = useContext(UserContext);
-
     const [emailValue, setEmailValue] = useState(user.email);
     const [usernameValue, setUsernameValue] = useState(user.username);
     const [friCodeValue, setFriCodeValue] = useState(user.friCode);
@@ -20,6 +19,8 @@ export default function SettingsPage() {
     const [payload, setPayload] = useState({id: user._id})
     const [changeMade, setChangeMade] = useState(false)
     const [socket, setSocket] = useState(null) 
+    const [showSidebar, setShowSidebar] = useState(false)
+    const [apiLoader, setApiLoader] = useState(false)
 
     useEffect(() => {
         const newSocket = io.connect(import.meta.env.VITE_BACKEND_DOMAIN);
@@ -151,8 +152,9 @@ export default function SettingsPage() {
     return (
         <div className="h-dvh flex flex-col">
             < InfoMsg infoMsg={infoMsg}/>
-            <Header showNotif={true}/>
+            <Header showNotif={true} socket={socket} showToggle={true} setShowSidebar={setShowSidebar}/>
             <main className="grow bg-neutral-900">
+                < Sidebar setUser={setUser} infoMsg={infoMsg} setInfoMsg={setInfoMsg} setApiLoader={setApiLoader} socket={socket} showSidebar={showSidebar}/>
                 <h1 className="text-slate-400 font-black font-roboto text-3xl w-[80%] mx-auto my-5">Account settings</h1>
                 <div className="font-mono w-[80%] min-w-[300px] mx-auto bg-neutral-950 h-[70%] flex rounded-xl">
                     <div className="w-[90%] text-slate-100 mt-[25px] px-10 flex flex-col gap-5 items-center lg:items-start">

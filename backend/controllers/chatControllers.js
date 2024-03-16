@@ -3,10 +3,21 @@ const User = require("../models/User")
 const mongoose = require('mongoose');
 
 const chatGet = async (req, res) => {
-    try{
-        const {id1, id2} = req.query
+    try {
+        const { id1, id2 } = req.query;
 
-        const objId1 = new mongoose.Types.ObjectId(id1);
+        if (!mongoose.Types.ObjectId.isValid(id1) || !mongoose.Types.ObjectId.isValid(id2)) {
+            return res.status(400).json({ message: "Invalid user id" });
+        }
+
+        const existingUser1 = await User.findById(id1)
+        const existingUser2 = await User.findById(id2)
+
+        if(!existingUser1 || !existingUser2) return res.status(404).json({ message: "User not found" })
+
+        if(!existingUser1.friends.includes(id2)) return res.status(404).json({ message: "User not found" })
+
+        const objId1 = new mongoose.Types.ObjectId(id1)
 
         const messages = await Message.find({
             $or: [
@@ -16,13 +27,12 @@ const chatGet = async (req, res) => {
             deletedFor: { $nin: [objId1] }
         });
 
-        if(messages) return res.json({messages}).status(200)
-
-    }catch(err){
-        console.log(err)
-        return res.status(500).json({message: "Internal server error"});    
+        if (messages) return res.json({ messages }).status(200);
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 
 const unreadMessagesFromGet = async (req, res) => {

@@ -47,7 +47,7 @@ export default function AddFriend({showModal, setShowModal, user, setInfoMsg}){
                     isErr: true
                 }))
             }
-
+            setFriendValue("")
         }catch(err){
             console.log(err)
             setInfoMsg(prevState => ({

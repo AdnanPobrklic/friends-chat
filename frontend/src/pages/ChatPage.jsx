@@ -4,17 +4,20 @@ import Header from "../components/MainComponents/Header";
 import InfoMsg from "../components/Partials/InfoMessage";
 import Chat from "../components/MainComponents/Chat"
 import { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "../components/Auth/ProtectedRoute";
 import io from "socket.io-client"
 
 export default function ChatPage() {
 
+    const navigate = useNavigate()
     const {user, setUser}  = useContext(UserContext)
     const [infoMsg, setInfoMsg] = useState({value: "", isErr: false, isShown: false})
     const [apiLoader, setApiLoader] = useState(false)
     const [socket, setSocket] = useState(null) 
     const [messages, setMessages] = useState([])
     const [showSidebar, setShowSidebar] = useState(window.innerWidth > 700);
+    const [fetchError, setFetchError] = useState(true)
 
     useEffect(() => {
         const handleResize = () => {
@@ -38,11 +41,14 @@ export default function ChatPage() {
     
                 if(res.status === 200){
                     const data = await res.json()
+                    setFetchError(false)
                     setMessages(data.messages)
-                }else if(res.status === 500){
+                }else if(res.status < 500 &&  res.status >= 400){
+                    navigate("/")
+                }else{
                     throw new Error()
                 }
-    
+
             }catch(err){
                 setInfoMsg((prevState) => ({
                     value: "Something went wrong, please try again later",
@@ -51,12 +57,9 @@ export default function ChatPage() {
                 }));
             }
         }
-    
-        fetchData()
-    }, [])
 
-    useEffect(() => {
-        
+        fetchData()
+
         const newSocket = io.connect(import.meta.env.VITE_BACKEND_DOMAIN);
         setSocket(newSocket) 
 
@@ -73,7 +76,7 @@ export default function ChatPage() {
                 newSocket.disconnect();
             }
         };
-        
+
     }, [])
 
     useEffect(() => {
@@ -108,10 +111,10 @@ export default function ChatPage() {
     return (
         <div className="h-dvh flex flex-col">
             < InfoMsg infoMsg={infoMsg} apiLoader={apiLoader}/>
-            <Header showNotif={true} showToggle={true} setShowSidebar={setShowSidebar}/>
+            <Header showNotif={true} socket={socket} showToggle={true} setShowSidebar={setShowSidebar}/>
             <main className="flex-grow bg-neutral-900 flex overflow-hidden">
-                < Sidebar  socket={socket} setMessages={setMessages} setInfoMsg={setInfoMsg} showSidebar={showSidebar}/>
-                < Chat  socket={socket} getReciverId={getReciverId} messages={messages} setMessages={setMessages} showSidebar={showSidebar}/>
+                < Sidebar setUser={setUser} infoMsg={infoMsg} setInfoMsg={setInfoMsg} setApiLoader={setApiLoader} socket={socket} showSidebar={showSidebar}/>
+                {!fetchError && < Chat  socket={socket} getReciverId={getReciverId} messages={messages} setMessages={setMessages} showSidebar={showSidebar}/>}
             </main>
             <Footer showNotif={true}/>
         </div>

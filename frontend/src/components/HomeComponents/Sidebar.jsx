@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState, useMemo } from "react";
 import AddFriend from "./AddFriend";
 import { UserContext } from "../Auth/ProtectedRoute";
-import { Link } from "react-router-dom";
+import { NavLink , Link} from "react-router-dom";
 
 export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, showSidebar }) {
 
@@ -116,6 +116,7 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
             socket.off("friendsUpdate");
 
             socket.on("friendsUpdate", (data) => {
+                console.log(data)
                 setFriends(data.friends);
                 setUser((prevState) => ({ ...prevState, friends: data.friends }));
             });
@@ -167,6 +168,7 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
             });
 
             if (res.status === 200) {
+                if(getReceiverId() === e.target.value) navigate(0)
                 setInfoMsg((prevState) => ({
                     value: "Friend deleted",
                     isShown: true,
@@ -267,20 +269,19 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
                 ) : (
                     filteredFriends.map((friend, index) => (
                         <li key={friend._id} className={`flex gap-5 items-center px-2 ${(friend.unreadMessage && friend._id != getReceiverId()) ? "bg-blue-950" : "bg-neutral-950"} hover:bg-zinc-900 transition-all cursor-pointer border-b-4 border-neutral-900`}>
-                                <Link
-                                    to={`/chat/${getRoomName(user._id, friend._id)}`}
-                                    className="grow flex items-center gap-5 p-2 pl-3 text-center"
-                                    >
-
-                                    <div className="relative">
-                                        <i className="fa-solid fa-user text-2xl"></i>
-                                        <span className={`absolute top-[5px] right-[-15px] ${friend.isOnline === 1 ? "text-lime-500" : "text-gray-500"} text-4xl`}>&#x2022;</span>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <p className="text-sm font-semibold">{friend.username}</p>
-                                        <p className="text-xs font-semibold">#{friend.friCode}</p>
-                                    </div>
-                                </Link>
+                            <NavLink
+                                to={`/chat/${getRoomName(user._id, friend._id)}`}
+                                className="grow flex items-center gap-5 p-2 pl-3 text-center"
+                            >
+                                <div className="relative">
+                                    <i className="fa-solid fa-user text-2xl"></i>
+                                    <span className={`absolute top-[5px] right-[-15px] ${friend.isOnline === 1 ? "text-lime-500" : "text-gray-500"} text-4xl`}>•</span>
+                                </div>
+                                <div className="flex flex-col">
+                                    <p className="text-sm font-semibold">{friend.username}</p>
+                                    <p className="text-xs font-semibold">#{friend.friCode}</p>
+                                </div>
+                            </NavLink>
                             {(friend.unreadMessage && friend._id != getReceiverId()) && <p className="font-black text-blue-500">!</p>}
                             <div className="text-gray-200 font-black relative text-end text-[15px]">
                                 <i className="fa-solid fa-gear md:hover:opacity-50" onClick={handleShowFOptions}></i>

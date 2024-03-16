@@ -42,8 +42,6 @@ export default function LogInCard({setInfoMsg, infoMsg, setApiLoader}){
     
             const data = await res.json()
 
-            console.log(res.status)
-    
             if(res.status === 200){
                 navigate("/")
             }else{
@@ -87,12 +85,12 @@ export default function LogInCard({setInfoMsg, infoMsg, setApiLoader}){
                 <h2 className="text-center text-2xl sm:text-3xl lg:text-4xl font-semibold select-none">Welcome back !</h2>
                 <div className="flex flex-col gap-1">
                     <label className="uppercase tracking-wide text-xs text-gray-400 lg:text-sm" htmlFor="username">email</label>
-                    <input onChange={handleEmailValueChange} value={emailValue} className="text-slate-100 px-2 py-1 font-roboto rounded border-2 border-black bg-stone-950" type="text" name="username" id="username" />
+                    <input onChange={handleEmailValueChange} value={emailValue} className="text-slate-100 px-2 py-1 font-roboto rounded border-2 border-black bg-stone-950" type="text" name="username" id="username" autoComplete="on" />
                 </div>
                 <div className="flex flex-col gap-1">
                     <label className="uppercase tracking-wide text-xs text-gray-400 lg:text-sm" htmlFor="password">password</label>
                     <div className="w-full relative">
-                        <input onChange={handlePasswordValueChange} value={passwordValue} className="text-slate-100 w-full px-2 py-1 font-roboto rounded border  border-black bg-stone-950" type={revealPwd ? "text" : "password"} name="password" id="password"  />
+                        <input onChange={handlePasswordValueChange} value={passwordValue} className="text-slate-100 w-full px-2 py-1 font-roboto rounded border  border-black bg-stone-950" type={revealPwd ? "text" : "password"} name="password" id="password"  autoComplete="on"/>
                         <i onClick={handleRevealPwd} className={`absolute fa-solid ${revealSlash ? "fa-eye-slash" : "fa-eye"} right-2 translate-y-1/2 text-slate-500 md:hover:opacity-50 cursor-pointer`}></i>                    
                     </div>            
                 </div>
