@@ -113,7 +113,7 @@ export default function ChatPage() {
             < InfoMsg infoMsg={infoMsg} apiLoader={apiLoader}/>
             <Header showNotif={true} socket={socket} showToggle={true} setShowSidebar={setShowSidebar}/>
             <main className="flex-grow bg-neutral-900 flex overflow-hidden">
-                < Sidebar setUser={setUser} infoMsg={infoMsg} setInfoMsg={setInfoMsg} setApiLoader={setApiLoader} socket={socket} showSidebar={showSidebar}/>
+                < Sidebar setMessages={setMessages} setUser={setUser} infoMsg={infoMsg} setInfoMsg={setInfoMsg} setApiLoader={setApiLoader} socket={socket} showSidebar={showSidebar}/>
                 {!fetchError && < Chat  socket={socket} getReciverId={getReciverId} messages={messages} setMessages={setMessages} showSidebar={showSidebar}/>}
             </main>
             <Footer showNotif={true}/>

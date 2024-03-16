@@ -190,7 +190,7 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
     };
 
     const handleClearChat = async (e) => {
-        console.log(e.target.value)
+        setMessages([])
         try {
             const res = await fetch(`${import.meta.env.VITE_BACKEND_DOMAIN}/chat/clear-chat?id1=${user._id}&id2=${e.target.value}`, {
                 method: "DELETE",
@@ -268,7 +268,7 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
                     <p className="text-center text-sm pt-[50%]">No matching friends found</p>
                 ) : (
                     filteredFriends.map((friend, index) => (
-                        <li key={friend._id} className={`flex gap-5 items-center px-2 ${(friend.unreadMessage && friend._id != getReceiverId()) ? "bg-blue-950" : "bg-neutral-950"} hover:bg-zinc-900 transition-all cursor-pointer border-b-4 border-neutral-900`}>
+                        <li key={friend._id} className={`flex items-center px-2 ${(friend.unreadMessage && friend._id != getReceiverId()) ? "bg-blue-950" : "bg-neutral-950"} hover:bg-zinc-900 transition-all cursor-pointer border-b-4 border-neutral-900`}>
                             <NavLink
                                 to={`/chat/${getRoomName(user._id, friend._id)}`}
                                 className="grow flex items-center gap-5 p-2 pl-3 text-center"
@@ -283,7 +283,7 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
                                 </div>
                             </NavLink>
                             {(friend.unreadMessage && friend._id != getReceiverId()) && <p className="font-black text-blue-500">!</p>}
-                            <div className="text-gray-200 font-black relative text-end text-[15px]">
+                            <div className="text-gray-200 font-black relative text-end text-[15px] ml-auto">
                                 <i className="fa-solid fa-gear md:hover:opacity-50" onClick={handleShowFOptions}></i>
                                 <div className={`z-20 hidden absolute right-[0px] bg-gray-700 rounded flex flex-col`}>
                                     <button
@@ -302,6 +302,7 @@ export default function Sidebar({ setInfoMsg, infoMsg, socket, setMessages, show
                                     </button>
                                 </div>
                             </div>
+                            
                         </li>
                     ))
                 )}

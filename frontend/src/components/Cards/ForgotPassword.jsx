@@ -35,6 +35,8 @@ export default function LogInCard({setInfoMsg, infoMsg, setApiLoader}){
                     isShown: true,
                     isErr: false
                 }))
+            }else{
+                throw new Error()
             }
 
         }catch(err){

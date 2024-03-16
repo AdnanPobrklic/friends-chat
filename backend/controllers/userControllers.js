@@ -3,20 +3,12 @@ const bcrypt = require("bcrypt")
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
-    host: "smtp-mail.outlook.com",
-    secureConnection: false,
-    port: 587,
-    pool: true,
-    maxConnections: 3, 
-    tls: {
-        ciphers:'SSLv3',
-        rejectUnauthorized: false
-    },
+    service: "hotmail",
     auth: {
         user: process.env.EMAIL,
         pass: process.env.EMAIL_PW,
     }
-});
+});        
 
 const updateUserInfoPatch = async (req, res) => {
     try{
@@ -45,12 +37,9 @@ const updateUserInfoPatch = async (req, res) => {
 
 const resetPasswordPost = async (req, res) => {
     try {
-
         const {email} = req.body
-        console.log(email)
 
         const user = await User.findOne({email})
-
         if(!user) return res.status(200).json({message: "No account with specified email found"})
 
         const newPwd = uuidv4().substring(0, 7)
@@ -58,7 +47,6 @@ const resetPasswordPost = async (req, res) => {
         const hashedNewPwd = bcrypt.hashSync(newPwd, salt)
 
         user.password = hashedNewPwd
-        await user.save()
 
         transporter.sendMail({
             from: process.env.EMAIL,
@@ -68,13 +56,15 @@ const resetPasswordPost = async (req, res) => {
                         Your new friChat password is ${newPwd}, if you want you can set a custom password once you log into your account.
                         If you did not send this request please ignore it.
                     </h2>`,
-        }, (error, info) => {
+        }, async (error, info) => {
+            console.log(info)
             if (error) {
-                console.log(error);
+                console.log(error)
+                return res.status(500).json({message: "There was an error with our mail service provider, please try again later"})
             }
+            await user.save()
+            return res.status(200).json({message: "Password reset email sent"})
         });
-
-        return res.status(200).json({message: "Password reset email sent"})
 
     }catch(err){
         console.log(err)
