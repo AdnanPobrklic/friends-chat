@@ -20,11 +20,9 @@ const sessionMiddleware = session({
     resave: true,
     saveUninitialized: false,
     cookie: { 
-        /*
         sameSite: 'none',
         secure: true,
         partitioned: true,
-        */
         maxAge: (7 * 24 * 60 * 60 * 1000)
     },
     store: MongoStore.create({ mongoUrl: dbURI }),
