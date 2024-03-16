@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import CircleLoader from "react-spinners/CircleLoader" ;
+import Loader from "../Partials/Loader";
 
 export default function AuthenticatedRoute({ children }){
 
@@ -29,11 +29,6 @@ export default function AuthenticatedRoute({ children }){
         case false:
             return children
         case null:
-            return (
-                <div className="w-full h-dvh bg-stone-950 flex justify-center items-center">
-                    <CircleLoader color="rgb(59 130 246)" />
-                </div>
-            )
+            return < Loader />
     }
-
 }
