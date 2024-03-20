@@ -19,7 +19,7 @@ const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET,
     resave: true,
      cookie: { 
-        sameSite: "lax",
+        sameSite: "none",
         secure: true,
         partitioned: true,
         maxAge: (7 * 24 * 60 * 60 * 1000)
