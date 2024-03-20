@@ -58,6 +58,7 @@ const logOutPost = async (req, res) => {
 }
 
 const checkIfAuthenticated = async (req, res) => {
+    console.log(req.session)
     if (req.session && req.session.user) {
         const user = await User.findById(req.session.user._id).populate("notifications.from friends", "username friCode isOnline");
         return res.status(200).json({user: user}); 
