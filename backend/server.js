@@ -18,7 +18,7 @@ const chatRoutes = require("./routes/chatRoutes")
 const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET,
     resave: true,
-     cookie: { 
+    cookie: { 
         sameSite: "none",
         secure: true,
         partitioned: true,
@@ -31,13 +31,6 @@ const sessionMiddleware = session({
 app.set('trust proxy', 1)
 app.use(sessionMiddleware);
 app.use(express.json());
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', frontendDomain );
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  next();
-});
 app.use(cors({
     origin: frontendDomain,
     methods: ["POST", "DELETE", "PATCH"],
