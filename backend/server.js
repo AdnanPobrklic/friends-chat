@@ -19,10 +19,10 @@ const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET,
     resave: true,
         cookie: { 
-        //sameSite: 'none',
+        sameSite: 'none',
         secure: true,
         partitioned: true,
-        //maxAge: (7 * 24 * 60 * 60 * 1000)
+        maxAge: (7 * 24 * 60 * 60 * 1000)
     },
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: dbURI }),
@@ -32,11 +32,10 @@ app.set('trust proxy', 1)
 app.use(sessionMiddleware);
 app.use(express.json());
 app.use(cors({
-    origin: frontendDomain,
+    origin: "*",
     methods: ["POST", "DELETE", "PATCH"],
     credentials: true
 }));
-
 mongoose.connect(dbURI)
 .then(() => {
     server.listen(port, () => {
