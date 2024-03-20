@@ -18,8 +18,8 @@ const chatRoutes = require("./routes/chatRoutes")
 const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET,
     resave: true,
-        cookie: { 
-        sameSite: 'none',
+     cookie: { 
+        sameSite: false,
         secure: true,
         partitioned: true,
         maxAge: (7 * 24 * 60 * 60 * 1000)
@@ -32,7 +32,7 @@ app.set('trust proxy', 1)
 app.use(sessionMiddleware);
 app.use(express.json());
 app.use(cors({
-    origin: "*",
+    origin: frontendDomain,
     methods: ["POST", "DELETE", "PATCH"],
     credentials: true
 }));
